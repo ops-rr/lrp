@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>假況通報平台</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ── Shopee DMS 配色 ───────────────────────────── */
+    --shopee: #ee4d2d;          /* 蝦皮主橘 */
+    --shopee-hover: #f05d40;
+    --shopee-dark: #d0011b;
+    --shopee-soft: #fff1ee;     /* 淡橘底(hover / active 用) */
+
+    --bg: #f5f5f5;              /* 頁面背景灰 */
+    --surface: #ffffff;        /* 卡片白 */
+    --surface2: #ffffff;       /* 輸入框白 */
+    --border: #e5e5e5;
+    --border-strong: #cfcfcf;
+
+    --text: #222222;
+    --text2: #757575;
+    --text3: #bbbbbb;
+
+    /* JS 有直接引用以下變數,名稱必須保留 */
+    --accent: #ee4d2d;
+    --success: #26aa99;        /* 蝦皮系綠(核准) */
+    --danger: #ee4d2d;         /* 蝦皮紅(錯誤 / 拒絕) */
+    --pending: #ff9800;        /* 審核中橘黃 */
+
+    --radius: 4px;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-card: 0 1px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans TC', -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 32px 20px 48px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Header ──────────────────────────────────────── */
+  .header {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--shopee);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .header-tag {
+    font-size: 11px;
+    color: var(--shopee);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; line-height: 1.3; }
+  .header h1 span { color: var(--shopee); }
+
+  .user-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 6px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .user-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; }
+
+  /* ── Tabs(蝦皮底線式頁籤)─────────────────────── */
+  .tabs {
+    display: flex;
+    gap: 28px;
+    padding: 0 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+  .tab {
+    padding: 12px 2px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text2);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: -1px;
+    font-family: inherit;
+    transition: color 0.15s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--shopee); border-bottom-color: var(--shopee); font-weight: 700; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── Form ────────────────────────────────────────── */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+  }
+  .form-group { margin-bottom: 18px; }
+  .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 7px;
+  }
+  .form-control {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+    appearance: none;
+  }
+  .form-control:focus {
+    border-color: var(--shopee);
+    box-shadow: 0 0 0 2px var(--shopee-soft);
+  }
+  .form-control::placeholder { color: var(--text3); }
+  .form-control option { background: var(--surface); color: var(--text); }
+
+  select.form-control {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23757575' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+  }
+
+  /* RWD 響應式網格 */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 480px) {
+    .form-row { grid-template-columns: 1fr; gap: 6px; }
+  }
+
+  /* 嚴格控制日期 / 時間 50/50 版面 */
+  .time-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .time-parts { display: flex; align-items: center; gap: 4px; }
+  .time-parts select {
+    flex: 1;
+    padding: 10px 4px;
+    text-align: center;
+    min-width: 0;
+    background-image: none;
+    padding-right: 4px;
+  }
+  .time-colon { font-weight: 700; color: var(--text3); }
+
+  textarea.form-control { resize: vertical; min-height: 88px; line-height: 1.5; }
+
+  .duration-value {
+    height: 24px;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    color: var(--shopee);
+    font-size: 16px;
+  }
+
+  /* ── Submit 按鈕 ─────────────────────────────────── */
+  .submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--shopee);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: inherit;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.09);
+  }
+  .submit-btn:hover { background: var(--shopee-hover); }
+  .submit-btn:active { background: var(--shopee-dark); }
+  .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  /* ── 審核記錄清單 ────────────────────────────────── */
+  .status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .status-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .refresh-btn {
+    padding: 6px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    color: var(--text2);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .refresh-btn:hover { border-color: var(--shopee); color: var(--shopee); }
+
+  .leave-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.15s;
+  }
+  .leave-card:hover { box-shadow: var(--shadow-card); }
+  .leave-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .leave-type-badge { font-size: 15px; font-weight: 700; color: var(--text); }
+
+  .status-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .status-pending { background: rgba(255, 152, 0, 0.12); color: var(--pending); border: 1px solid rgba(255, 152, 0, 0.35); }
+  .status-approved { background: rgba(38, 170, 153, 0.12); color: var(--success); border: 1px solid rgba(38, 170, 153, 0.35); }
+  .status-rejected { background: rgba(238, 77, 45, 0.10); color: var(--shopee-dark); border: 1px solid rgba(238, 77, 45, 0.30); }
+
+  .leave-dates { font-size: 13px; color: var(--text2); margin-bottom: 5px; }
+  .leave-reason { font-size: 14px; color: var(--text); line-height: 1.5; }
+  .reject-reason {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: var(--shopee-soft);
+    border-left: 3px solid var(--shopee);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 13px;
+    color: var(--shopee-dark);
+  }
+
+  .empty-state { text-align: center; padding: 56px 20px; color: var(--text3); }
+  .empty-icon { font-size: 38px; margin-bottom: 12px; opacity: 0.7; }
+  .empty-text { font-size: 14px; }
+
+  /* ── Toast & Loading ─────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--text3);
+    border-radius: var(--radius);
+    padding: 13px 20px;
+    font-size: 14px;
+    color: var(--text);
+    z-index: 100;
+    transition: transform 0.3s ease;
+    min-width: 260px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { border-left-color: var(--success); }
+  .toast.error { border-left-color: var(--shopee); }
+  .loading {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  /* ── 登入頁 ──────────────────────────────────────── */
+  .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--shopee);
+    border-radius: var(--radius);
+    padding: 44px 36px;
+    text-align: center;
+    max-width: 380px;
+    width: 100%;
+    box-shadow: var(--shadow-card);
+  }
+  .login-logo { font-size: 38px; margin-bottom: 14px; }
+  .login-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .login-title span { color: var(--shopee); }
+  .login-sub { font-size: 13px; color: var(--text2); margin-bottom: 28px; line-height: 1.7; }
+  .google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px;
+    background: #fff;
+    color: #444;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .google-btn:hover { background: #fafafa; border-color: var(--text3); }
+  .google-icon { width: 18px; height: 18px; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+     <!--
+    <div class="login-logo">📋</div>
+    -->
+    <div class="login-title">RR <span>假況通報平台</span></div>
+    <div class="login-sub">使用您的 Shopee Google 帳號登入<br>通報申請假況</div>
+    <button class="google-btn" onclick="handleGoogleLogin()">
+      <svg class="google-icon" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      使用 Google 帳號登入
+    </button>
+  </div>
+</div>
+
+<div class="container" id="mainApp" style="display:none">
+  <div class="header">
+    <div class="header-tag">Leave Management</div>
+    <h1>請假<span>申請</span>系統</h1>
+    <div class="user-badge" onclick="logout()" style="cursor: pointer; transition: all 0.15s;" onmouseover="this.style.borderColor='var(--shopee)'; this.style.color='var(--shopee)';" onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text2)';" title="點擊登出 / 切換帳號">
+      <div class="user-dot"></div>
+      <span id="userEmail">載入中...</span>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('apply')">請假通報</button>
+    <button class="tab" onclick="switchTab('status')">通報結果</button>
+  </div>
+
+  <div class="tab-content active" id="tab-apply">
+    <div class="form-card">
+      <div class="form-group">
+        <label class="form-label">假別</label>
+        <select class="form-control" id="leaveType">
+          <option value="">請選擇假別</option>
+          <option value="特休">特休</option>
+          <option value="事假">事假</option>
+          <option value="病假">病假</option>
+          <option value="生理假">生理假</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">開始時間</label>
+          <div class="time-wrapper">
+            <input type="date" class="form-control" id="startDate" onchange="calculateDuration()">
+            <div class="time-parts">
+              <select class="form-control" id="startHour" onchange="calculateDuration()"></select>
+              <span class="time-colon">:</span>
+              <select class="form-control" id="startMinute" onchange="calculateDuration()">
+                <option value="00">00</option>
+                <option value="30">30</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">結束時間</label>
+          <div class="time-wrapper">
+            <input type="date" class="form-control" id="endDate" onchange="calculateDuration()">
+            <div class="time-parts">
+              <select class="form-control" id="endHour" onchange="calculateDuration()"></select>
+              <span class="time-colon">:</span>
+              <select class="form-control" id="endMinute" onchange="calculateDuration()">
+                <option value="00">00</option>
+                <option value="30">30</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">請假時數</label>
+        <div id="durationDisplay" class="duration-value">0 hrs</div>
+      </div>
+       <!--
+      <div class="form-group">
+        <label class="form-label">原因/說明</label>
+        <textarea class="form-control" id="reason" placeholder="請簡述請假原因..."></textarea>
+      </div>
+      -->
+
+      <button class="submit-btn" id="submitBtn" onclick="submitLeave()">送出申請</button>
+    </div>
+  </div>
+
+  <div class="tab-content" id="tab-status">
+    <div class="status-list">
+      <div class="status-header">
+        <span class="status-title">我的申請記錄</span>
+        <button class="refresh-btn" onclick="loadLeaveStatus()">↻ 重新整理</button>
+      </div>
+      <div id="leaveList">
+        <div class="empty-state">
+          <div class="empty-text">載入中...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const API_BASE = 'https://seatalk-callback.onrender.com';
+  let currentUser = null;
+
+  document.addEventListener("DOMContentLoaded", function() {
+    populateHours();
+    setDefaultDates();
+    checkAuth();
+  });
+
+  function populateHours() {
+    const startHour = document.getElementById("startHour");
+    const endHour = document.getElementById("endHour");
+    for (let i = 0; i < 24; i++) {
+      let hourStr = i.toString().padStart(2, '0');
+      startHour.add(new Option(hourStr, hourStr));
+      endHour.add(new Option(hourStr, hourStr));
+    }
+    startHour.value = "09";
+    endHour.value = "18";
+  }
+
+  function setDefaultDates() {
+    const localDate = new Date();
+    const offset = localDate.getTimezoneOffset() * 60000;
+    const today = new Date(localDate.getTime() - offset).toISOString().split('T')[0];
+    document.getElementById("startDate").value = today;
+    document.getElementById("endDate").value = today;
+    calculateDuration();
+  }
+
+  function calculateDuration() {
+    const startDate = document.getElementById("startDate").value;
+    const startHour = document.getElementById("startHour").value;
+    const startMinute = document.getElementById("startMinute").value;
+    const endDate = document.getElementById("endDate").value;
+    const endHour = document.getElementById("endHour").value;
+    const endMinute = document.getElementById("endMinute").value;
+    const display = document.getElementById("durationDisplay");
+
+    if (startDate && endDate && startHour && endHour) {
+      const start = new Date(`${startDate}T${startHour}:${startMinute}:00`);
+      const end = new Date(`${endDate}T${endHour}:${endMinute}:00`);
+      const diffMs = end - start;
+      const diffHours = diffMs / (1000 * 60 * 60);
+
+      if (diffHours < 0) {
+        display.innerText = "時間錯誤 (結束需晚於開始)";
+        display.style.color = "var(--danger)";
+      } else {
+        display.innerText = `${diffHours} hrs`;
+        display.style.color = "var(--accent)";
+      }
+    } else {
+      display.innerText = "0 hrs";
+      display.style.color = "var(--text2)";
+    }
+  }
+
+  // ── Google OAuth ──────────────────────────────────────
+  function handleGoogleLogin() {
+    window.location.href = `${API_BASE}/auth/login?redirect=${encodeURIComponent(window.location.href)}`;
+  }
+
+  // ── Logout ────────────────────────────────────────────
+  function logout() {
+    if (confirm(`目前的帳號是：\n${currentUser.email}\n\n確定要登出並回到登入畫面嗎？`)) {
+      localStorage.removeItem('user_email');
+      localStorage.removeItem('user_name');
+      currentUser = null;
+      window.history.replaceState({}, document.title, window.location.pathname);
+      showLogin();
+    }
+  }
+
+  // ── Google OAuth ──────────────────────────────────────
+  function checkAuth() {
+    const params = new URLSearchParams(window.location.search);
+    const urlToken = params.get('token');
+
+    if (urlToken) {
+      localStorage.setItem('auth_token', urlToken);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    const token = localStorage.getItem('auth_token');
+
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        currentUser = {
+          email: payload.email,
+          name: payload.name || payload.email.split('@')[0],
+          token: token
+        };
+        showApp();
+      } catch (e) {
+        console.error("Token 解析失敗", e);
+        showLogin();
+      }
+    } else {
+      showLogin();
+    }
+  }
+
+  function showApp() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    document.getElementById('userEmail').textContent = currentUser.email;
+  }
+
+  function showLogin() {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('mainApp').style.display = 'none';
+  }
+
+  // ── Tabs ──────────────────────────────────────────────
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach((t, i) => {
+      t.classList.toggle('active', (i === 0 && tab === 'apply') || (i === 1 && tab === 'status'));
+    });
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+    if (tab === 'status') loadLeaveStatus();
+  }
+
+  // ── Submit Leave ──────────────────────────────────────
+  async function submitLeave() {
+    const leaveType = document.getElementById('leaveType').value;
+    const startDate = document.getElementById('startDate').value;
+    const startHour = document.getElementById('startHour').value;
+    const startMinute = document.getElementById('startMinute').value;
+    const endDate = document.getElementById('endDate').value;
+    const endHour = document.getElementById('endHour').value;
+    const endMinute = document.getElementById('endMinute').value;
+    //const reason = document.getElementById('reason').value;
+    const reason = "無"
+    const durationText = document.getElementById("durationDisplay").innerText;
+
+    if (!leaveType || !startDate || !endDate || !reason) {
+      showToast('請填寫所有欄位', 'error');
+      return;
+    }
+
+    if (durationText.includes('錯誤')) {
+      showToast('結束時間必須晚於開始時間', 'error');
+      return;
+    }
+
+    const startDatetime = `${startDate} ${startHour}:${startMinute}`;
+    const endDatetime = `${endDate} ${endHour}:${endMinute}`;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading"></span>送出中...';
+
+    try {
+      const res = await fetch(`${API_BASE}/leave/apply`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentUser.token}`
+        },
+        body: JSON.stringify({
+          leave_type: leaveType,
+          start_datetime: startDatetime,
+          end_datetime: endDatetime,
+          reason: reason
+        })
+      });
+
+      const data = await res.json();
+      if (data.status === 'ok') {
+        showToast('申請送出成功！等待主管確認', 'success');
+        document.getElementById('leaveType').value = '';
+        //document.getElementById('reason').value = '';
+        setDefaultDates();
+      } else {
+        showToast(data.message || '送出失敗，請稍後再試', 'error');
+      }
+    } catch (e) {
+      showToast('網路錯誤，請稍後再試', 'error');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '送出申請';
+  }
+
+  // ── Load Status ───────────────────────────────────────
+  async function loadLeaveStatus() {
+    const list = document.getElementById('leaveList');
+    list.innerHTML = '<div class="empty-state"><div class="empty-text">載入中...</div></div>';
+
+    try {
+      const res = await fetch(`${API_BASE}/leave/list`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${currentUser.token}`
+        }
+      });
+      const data = await res.json();
+
+      if (!data.records || data.records.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">尚無申請記錄</div></div>';
+        return;
+      }
+
+      list.innerHTML = data.records.reverse().map((r, i) => `
+        <div class="leave-card">
+          <div class="leave-card-top">
+            <div class="leave-type-badge">${r.leave_type}</div>
+            <div class="status-badge status-${r.status}">
+              ${{ pending: '確認中', approved: '已確認', rejected: '已拒絕' }[r.status] || r.status}
+            </div>
+          </div>
+          <div class="leave-dates">${r.start_datetime} ～ ${r.end_datetime}</div>
+          <div class="leave-reason">${r.reason}</div>
+          ${r.status === 'rejected' && r.reject_reason ? `<div class="reject-reason">拒絕原因：${r.reject_reason}</div>` : ''}
+        </div>
+      `).join('');
+    } catch (e) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">載入失敗</div></div>';
+    }
+  }
+
+  // ── Toast ─────────────────────────────────────────────
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>
