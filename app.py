@@ -97,7 +97,7 @@ def build_leave_card(leave_data: dict) -> dict:
                 "element_type": "description",
                 "description": {
                     "format": 1,
-                    "text": f"**部門**：{leave_data['employee_department']}\n**員工**：{leave_data['employee_name']}\n**假別**：{leave_data['leave_type']}\n**開始時間**：{leave_data['start_datetime']}\n**結束時間**：{leave_data['end_datetime']}",
+                    "text": f"**假別**：{leave_data['leave_type']}\n**開始時間**：{leave_data['start_datetime']}\n**結束時間**：{leave_data['end_datetime']}",
                 },
             },
             {
