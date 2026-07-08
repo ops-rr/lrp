@@ -1,0 +1,7 @@
+firebase_admin
+requests
+Flask
+gunicorn
+gspread
+authlib
+PyJWT
