@@ -559,7 +559,7 @@ def bot_callback_handler():
             # ==========================================
             if message_id:
                 if action == "approve":
-                    status_text = "**已核准 (Approve)**"
+                    status_text = "**已確認 (Confirmed)**"
                 else:
                     status_text = f"**已拒絕** (原因：{reason})"
 
@@ -569,14 +569,14 @@ def bot_callback_handler():
                         {
                             "element_type": "title",
                             "title": {
-                                "text": f"{employee_name}請假審核申請 (已處理)"
+                                "text": f"{employee_name}請假審核申請 (已確認)"
                             }
                         },
                         {
                             "element_type": "description",
                             "description": {
                                 "format": 1,
-                                "text": f"**部門**：{employee_department}\n**員工**：{employee_name}\n**假別**：{leave_type}\n**開始時間**：{start_dt}\n**結束時間**：{end_dt}\n\n**審核結果**：{status_text}"
+                                "text": f"**假別**：{leave_type}\n**開始時間**：{start_dt}\n**結束時間**：{end_dt}\n"
                             }
                         }
                     ]
