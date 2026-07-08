@@ -348,7 +348,7 @@
      <!--
     <div class="login-logo">📋</div>
     -->
-    <div class="login-title">RR <span>假況通報平台</span></div>
+    <div class="login-title">RR 假況通報平台</div>
     <div class="login-sub">使用您的 Shopee Google 帳號登入<br>通報申請假況</div>
     <button class="google-btn" onclick="handleGoogleLogin()">
       <svg class="google-icon" viewBox="0 0 24 24">
@@ -364,8 +364,8 @@
 
 <div class="container" id="mainApp" style="display:none">
   <div class="header">
-    <div class="header-tag">Leave Management</div>
-    <h1>請假<span>申請</span>系統</h1>
+    <div class="header-tag">RR Leave Report Platform</div>
+    <h1>假況通報平台</h1>
     <div class="user-badge" onclick="logout()" style="cursor: pointer; transition: all 0.15s;" onmouseover="this.style.borderColor='var(--shopee)'; this.style.color='var(--shopee)';" onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text2)';" title="點擊登出 / 切換帳號">
       <div class="user-dot"></div>
       <span id="userEmail">載入中...</span>
@@ -433,14 +433,14 @@
       </div>
       -->
 
-      <button class="submit-btn" id="submitBtn" onclick="submitLeave()">送出申請</button>
+      <button class="submit-btn" id="submitBtn" onclick="submitLeave()">送出假況通報</button>
     </div>
   </div>
 
   <div class="tab-content" id="tab-status">
     <div class="status-list">
       <div class="status-header">
-        <span class="status-title">我的申請記錄</span>
+        <span class="status-title">我的送出記錄</span>
         <button class="refresh-btn" onclick="loadLeaveStatus()">↻ 重新整理</button>
       </div>
       <div id="leaveList">
