@@ -104,11 +104,11 @@ def build_leave_card(leave_data: dict) -> dict:
                 "element_type": "button",
                 "button": {
                     "button_type": "callback",
-                    "text": "審核通過",
+                    "text": "已確認",
                     "value": json.dumps(
                         {
                             "action": "approve",
-                            "reason": "審核通過",
+                            "reason": "已確認",
                             "request_id": leave_data["request_id"],
                         }
                     ),
