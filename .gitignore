@@ -1,0 +1,10 @@
+# 忽略金鑰檔案
+shopee-vm-api-9e48f1d27874.json
+googleapijson/
+
+# 忽略 Python 虛擬環境
+venv/
+__pycache__/
+
+# 忽略本地環境變數檔案
+.env
