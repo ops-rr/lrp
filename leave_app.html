@@ -214,6 +214,7 @@
     margin-bottom: 14px;
   }
   .status-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .status-notice { font-size: 12px; font-weight: 400; color: var(--text); }
   .refresh-btn {
     padding: 6px 12px;
     background: var(--surface);
@@ -441,7 +442,7 @@
     <div class="status-list">
       <div class="status-header">
         <span class="status-title">我的送出記錄</span>
-        <span class="status-title">※請假已確認，請上 HRIS or Apollo系統送出假單完成申請</span>
+        <span class="status-notice">※請假若已確認，請上 HRIS or Apollo系統送出假單完成申請</span>
         <button class="refresh-btn" onclick="loadLeaveStatus()">↻ 重新整理</button>
       </div>
       <div id="leaveList">
