@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RR Helper 隱私權政策</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1f2340;--muted:#6b7089;--line:#e3e6ee;--accent:#e8590c}
+@media (prefers-color-scheme:dark){:root{--bg:#191919;--card:#232323;--ink:#e8e8e8;--muted:#9b9b9b;--line:#353535}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.75 -apple-system,"Segoe UI","Microsoft JhengHei",sans-serif}
+main{max-width:820px;margin:0 auto;padding:32px 16px 64px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:16px}
+h1{font-size:24px;margin:0 0 4px}
+h2{font-size:17px;margin:0 0 10px;padding-left:10px;border-left:4px solid var(--accent)}
+.muted{color:var(--muted);font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+th{white-space:nowrap}
+ul{margin:6px 0;padding-left:22px}
+</style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <h1>RR Helper 隱私權政策</h1>
+    <div class="muted">最後更新：2026-11-06</div>
+    <p>RR Helper 是 Shopee 台灣 RR（Returns &amp; Refunds）團隊內部使用的 Chrome 擴充功能，提供案件處理輔助工具。本政策說明 RR Helper 會收集哪些資料、如何使用與保存。</p>
+  </div>
+
+  <div class="card">
+    <h2>收集的資料</h2>
+    <table>
+      <tr><th>類別</th><th>內容</th><th>收集對象</th></tr>
+      <tr><td>帳號</td><td>使用者在公司 DMS 系統登入的 email，用來辨識資料屬於哪位使用者</td><td>所有使用者</td></tr>
+      <tr><td>裝置編號</td><td>擴充功能第一次執行時隨機產生的編號，用來區分同一位使用者的不同電腦；不含任何硬體或電腦資訊</td><td>所有使用者</td></tr>
+      <tr><td>功能使用統計</td><td>每天各功能的使用次數：點擊的按鈕名稱、自動功能的結果（成功／失敗／未登入等）、提醒顯示的次數與類型</td><td>所有使用者</td></tr>
+      <tr><td>QA 回覆處理紀錄</td><td>按下「已處理」時的案件編號、回覆時間與處理時間</td><td>使用該功能的使用者</td></tr>
+      <tr><td>工作時間紀錄</td><td>
+        <ul>
+          <li>每段時間的開始／結束時間與狀態：工作中、Chrome 以外的程式、閒置（一段時間沒有滑鼠或鍵盤動作，或電腦鎖定）</li>
+          <li>當時前景分頁的分類：DMS、IH、BI、MyPage、Google 試算表／表單／簡報／文件，或其他網站</li>
+          <li>DMS 案件頁的案件編號、同時開啟的案件頁數量</li>
+          <li>Google 文件的文件 ID、標題與工作表編號</li>
+          <li>其他網站只記錄網域名稱（例如 www.example.com），不記錄完整網址</li>
+        </ul>
+      </td><td>經通知的指定使用者</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>不會收集的資料</h2>
+    <ul>
+      <li>按鍵內容、輸入的文字、密碼</li>
+      <li>畫面截圖或錄影</li>
+      <li>完整網址、網址參數、搜尋關鍵字</li>
+      <li>Chrome 以外程式的名稱或內容（例如通訊軟體的訊息）</li>
+      <li>Chrome 中其他個人資料（登入其他帳號的 Chrome）的任何活動</li>
+    </ul>
+    <p class="muted">「閒置」的判斷只使用 Chrome 提供的系統狀態（有動作／閒置／鎖定），不會讀取任何輸入內容。</p>
+  </div>
+
+  <div class="card">
+    <h2>資料用途</h2>
+    <ul>
+      <li>分析各類案件實際需要的處理時間與工作流程，作為作業規劃與績效指標調整的參考</li>
+      <li>了解 RR Helper 各功能的使用情況與錯誤率，用於改善工具</li>
+      <li>確認工具運作是否正常（例如外部系統是否登入成功）</li>
+    </ul>
+    <p>資料僅供 Shopee 台灣 RR 團隊內部使用，不會出售、出租，也不會提供給公司以外的第三方。</p>
+  </div>
+
+  <div class="card">
+    <h2>儲存與保存期限</h2>
+    <ul>
+      <li>資料先暫存在使用者瀏覽器中，每隔數分鐘批次傳送到暫存資料庫（Google Firebase）；該資料庫設定為使用者只能寫入、不能讀取</li>
+      <li>暫存資料定期轉存至團隊內部的資料庫後，即從暫存資料庫刪除</li>
+      <li>分析報表只開放給 RR 團隊的管理人員查看</li>
+      <li>原始紀錄保存 90 天；彙整後的統計數據依團隊作業需要保存</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>權限說明</h2>
+    <ul>
+      <li><b>網站存取權限</b>：在公司內部系統頁面（DMS、IH、SPX、BI、MyPage 等）提供輔助功能</li>
+      <li><b>tabs</b>：判斷目前使用的分頁屬於哪一類工作系統</li>
+      <li><b>idle</b>：判斷使用者是否正在操作電腦，以排除閒置時間</li>
+      <li><b>storage / unlimitedStorage</b>：在瀏覽器中保存設定、清單資料與尚未傳送的紀錄</li>
+      <li><b>alarms</b>：定時更新清單資料與傳送紀錄</li>
+      <li><b>scripting / contextMenus</b>：在頁面上顯示輔助工具與右鍵選單</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>聯絡方式</h2>
+    <p>對本政策或資料使用有任何疑問，請聯絡 RR SOP 團隊：chris.chouyh@shopee.com</p>
+    <p class="muted">本政策如有更新，將於此頁面公告並更新日期。</p>
+  </div>
+</main>
+</body>
+</html>
